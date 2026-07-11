@@ -231,7 +231,7 @@ function animate() {
   requestAnimationFrame(animate);
   if (model) {
     const progress = getScrollProgress();
-    model.rotation.y = -progress * Math.PI * 2;
+    model.rotation.y = Math.PI - progress * Math.PI * 2;
     updateInfoPanels(progress);
   }
   renderer.render(scene, camera);
