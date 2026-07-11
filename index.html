@@ -166,6 +166,19 @@
   <div id="hint">Scroll</div>
   <div id="scroll-spacer"></div>
 
+<script>
+  if (!HTMLScriptElement.supports || !HTMLScriptElement.supports('importmap')) {
+    document.getElementById('loading').textContent =
+      'Your browser does not support import maps. Please open this page in a recent version of Chrome, Edge, or Safari 16.4+.';
+  }
+  window.__modelLoadTimeout = setTimeout(() => {
+    const el = document.getElementById('loading');
+    if (el && el.style.display !== 'none') {
+      el.textContent = 'Still loading... this is taking longer than expected. Check your connection or try a different browser (Chrome/Edge recommended).';
+    }
+  }, 12000);
+</script>
+
 <script type="importmap">
 {
   "imports": {
@@ -228,6 +241,7 @@ mtlLoader.load('3DModel.mtl', (materials) => {
 
       scene.add(model);
       loadingEl.style.display = 'none';
+      clearTimeout(window.__modelLoadTimeout);
     },
     (xhr) => {
       if (xhr.lengthComputable) {
@@ -238,8 +252,13 @@ mtlLoader.load('3DModel.mtl', (materials) => {
     (error) => {
       loadingEl.textContent = 'Failed to load model.';
       console.error(error);
+      clearTimeout(window.__modelLoadTimeout);
     }
   );
+}, undefined, (error) => {
+  loadingEl.textContent = 'Failed to load material file.';
+  console.error(error);
+  clearTimeout(window.__modelLoadTimeout);
 });
 
 const infoPanels = [0, 1, 2, 3, 4].map((i) => document.getElementById(`info-${i}`));
