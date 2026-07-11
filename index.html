@@ -4,14 +4,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>3D Model Scroll</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   html, body {
     margin: 0;
     padding: 0;
-    background: #0c0a08;
+    background: #111;
     overflow-x: hidden;
   }
   #scroll-spacer {
@@ -23,121 +20,113 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: #171310;
   }
   #loading {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #cfc4b4;
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 1rem;
+    color: #eee;
+    font-family: sans-serif;
+    font-size: 1.2rem;
     z-index: 10;
-  }
-  #header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 36px 40px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: #8f8272;
-    z-index: 10;
-  }
-  #header .mark {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 1.1rem;
-    letter-spacing: 0.01em;
-    color: #e9dfd0;
-    text-transform: none;
-  }
-  #spec-sheet {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 32px 40px 40px;
-    z-index: 6;
-    pointer-events: none;
-  }
-  #spec-sheet .rule {
-    width: 100%;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.12);
-    margin-bottom: 22px;
-  }
-  #spec-sheet .row {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 24px;
-  }
-  #spec-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #8f8272;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.45s ease;
-  }
-  #spec-value {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 500;
-    font-size: clamp(1.3rem, 3.4vw, 1.9rem);
-    color: #f4ece1;
-    text-align: right;
-    opacity: 0;
-    transition: opacity 0.45s ease;
-  }
-  #spec-label.visible, #spec-value.visible {
-    opacity: 1;
   }
   #hint {
     position: fixed;
-    bottom: 118px;
+    bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
-    color: #8f8272;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
+    color: #ccc;
+    font-family: sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+  }
+  #progress-dots {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+  #progress-dots .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0.25;
+    transition: opacity 0.3s ease;
+  }
+  #progress-dots .dot.active {
+    opacity: 0.9;
+  }
+  .info-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-family: sans-serif;
+    color: #f2f2f2;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .info-panel.visible {
+    opacity: 1;
+  }
+  .info-panel .label {
+    font-size: 0.8rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    opacity: 0.7;
-    z-index: 10;
-    transition: opacity 0.4s ease;
+    color: #c98b4a;
+    margin-bottom: 10px;
+  }
+  .info-panel .value {
+    font-size: 2.2rem;
+    font-weight: 600;
+    font-style: italic;
   }
 </style>
 </head>
 <body>
-  <div id="header">
-    <span class="mark">Dosocho</span>
-    <span>Single Origin</span>
-  </div>
   <div id="canvas-container">
     <div id="loading">Loading model...</div>
   </div>
-  <div id="spec-sheet">
-    <div class="rule"></div>
-    <div class="row">
-      <div id="spec-label">Variedad</div>
-      <div id="spec-value">Bourbon Caturra</div>
-    </div>
+  <div id="info-0" class="info-panel">
+    <div class="label">Variedad</div>
+    <div class="value">Bourbon Caturra</div>
   </div>
-  <div id="hint">Scroll</div>
+  <div id="info-1" class="info-panel">
+    <div class="label">Altitud</div>
+    <div class="value">1800 MSNM</div>
+  </div>
+  <div id="info-2" class="info-panel">
+    <div class="label">Finca</div>
+    <div class="value">Vista Hermosa</div>
+  </div>
+  <div id="info-3" class="info-panel">
+    <div class="label">Proceso</div>
+    <div class="value">Lavado</div>
+  </div>
+  <div id="info-4" class="info-panel">
+    <div class="label">Región</div>
+    <div class="value">Huehuetenango</div>
+  </div>
+  <div id="progress-dots">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+  <div id="hint">Scroll to rotate</div>
   <div id="scroll-spacer"></div>
 
 <script>
@@ -171,7 +160,7 @@ const container = document.getElementById('canvas-container');
 const loadingEl = document.getElementById('loading');
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x171310);
+scene.background = new THREE.Color(0x111111);
 
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 0, 5);
@@ -235,17 +224,9 @@ mtlLoader.load('3DModel.mtl', (materials) => {
   clearTimeout(window.__modelLoadTimeout);
 });
 
-const specs = [
-  { label: 'Variedad', value: 'Bourbon Caturra' },
-  { label: 'Altitud', value: '1800 MSNM' },
-  { label: 'Finca', value: 'Vista Hermosa' },
-  { label: 'Proceso', value: 'Lavado' },
-  { label: 'Región', value: 'Huehuetenango' },
-];
+const infoPanels = [0, 1, 2, 3, 4].map((i) => document.getElementById(`info-${i}`));
+const dots = document.querySelectorAll('#progress-dots .dot');
 const hintEl = document.getElementById('hint');
-const specLabelEl = document.getElementById('spec-label');
-const specValueEl = document.getElementById('spec-value');
-let currentSpecIndex = -1;
 
 function getScrollProgress() {
   const scrollTop = window.scrollY;
@@ -253,20 +234,16 @@ function getScrollProgress() {
   return docHeight > 0 ? scrollTop / docHeight : 0;
 }
 
-function updateSpecSheet(progress) {
-  const segment = 1 / specs.length;
-  const activeIndex = Math.min(specs.length - 1, Math.floor(progress / segment));
-  const isVisible = progress > 0.01;
-
-  if (activeIndex !== currentSpecIndex) {
-    currentSpecIndex = activeIndex;
-    specLabelEl.textContent = specs[activeIndex].label;
-    specValueEl.textContent = specs[activeIndex].value;
-  }
-
-  specLabelEl.classList.toggle('visible', isVisible);
-  specValueEl.classList.toggle('visible', isVisible);
-  hintEl.style.opacity = isVisible ? '0' : '0.7';
+function updateInfoPanels(progress) {
+  const segment = 1 / infoPanels.length;
+  const activeIndex = Math.min(infoPanels.length - 1, Math.floor(progress / segment));
+  infoPanels.forEach((panel, i) => {
+    panel.classList.toggle('visible', i === activeIndex && progress > 0.01);
+  });
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === activeIndex);
+  });
+  hintEl.style.opacity = progress > 0.01 ? '0' : '0.6';
 }
 
 function animate() {
@@ -274,7 +251,7 @@ function animate() {
   if (model) {
     const progress = getScrollProgress();
     model.rotation.y = Math.PI - progress * Math.PI * 2;
-    updateSpecSheet(progress);
+    updateInfoPanels(progress);
   }
   renderer.render(scene, camera);
 }
