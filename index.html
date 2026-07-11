@@ -38,10 +38,32 @@
     transform: translateX(-50%);
     color: #ccc;
     font-family: sans-serif;
-    font-size: 0.9rem;
-    opacity: 0.7;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.6;
     z-index: 10;
     transition: opacity 0.3s ease;
+  }
+  #progress-dots {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+  #progress-dots .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0.25;
+    transition: opacity 0.3s ease;
+  }
+  #progress-dots .dot.active {
+    opacity: 0.9;
   }
   .info-panel {
     position: fixed;
@@ -60,15 +82,16 @@
     opacity: 1;
   }
   .info-panel .label {
-    font-size: 0.85rem;
-    letter-spacing: 0.15em;
+    font-size: 0.8rem;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
     color: #c98b4a;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
   .info-panel .value {
     font-size: 2.2rem;
     font-weight: 600;
+    font-style: italic;
   }
 </style>
 </head>
@@ -95,6 +118,13 @@
   <div id="info-4" class="info-panel">
     <div class="label">Región</div>
     <div class="value">Huehuetenango</div>
+  </div>
+  <div id="progress-dots">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
   </div>
   <div id="hint">Scroll to rotate</div>
   <div id="scroll-spacer"></div>
@@ -176,6 +206,7 @@ mtlLoader.load('3DModel.mtl', (materials) => {
 });
 
 const infoPanels = [0, 1, 2, 3, 4].map((i) => document.getElementById(`info-${i}`));
+const dots = document.querySelectorAll('#progress-dots .dot');
 const hintEl = document.getElementById('hint');
 
 function getScrollProgress() {
@@ -190,14 +221,17 @@ function updateInfoPanels(progress) {
   infoPanels.forEach((panel, i) => {
     panel.classList.toggle('visible', i === activeIndex && progress > 0.01);
   });
-  hintEl.style.opacity = progress > 0.01 ? '0' : '0.7';
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === activeIndex);
+  });
+  hintEl.style.opacity = progress > 0.01 ? '0' : '0.6';
 }
 
 function animate() {
   requestAnimationFrame(animate);
   if (model) {
     const progress = getScrollProgress();
-    model.rotation.y = progress * Math.PI * 4;
+    model.rotation.y = -progress * Math.PI * 2;
     updateInfoPanels(progress);
   }
   renderer.render(scene, camera);
