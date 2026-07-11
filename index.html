@@ -23,146 +23,120 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background:
-      radial-gradient(ellipse 60% 45% at 50% 46%, rgba(201, 139, 74, 0.16), transparent 70%),
-      radial-gradient(ellipse 120% 90% at 50% 100%, rgba(60, 40, 20, 0.35), transparent 60%),
-      #0c0a08;
-  }
-  #vignette {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 4;
-    box-shadow: inset 0 0 18vw rgba(0, 0, 0, 0.65);
+    background: #171310;
   }
   #loading {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #d8cfc2;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    color: #cfc4b4;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1rem;
     z-index: 10;
   }
-  #progress-rail {
+  #header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 36px 40px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8f8272;
+    z-index: 10;
+  }
+  #header .mark {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    letter-spacing: 0.01em;
+    color: #e9dfd0;
+    text-transform: none;
+  }
+  #spec-sheet {
     position: fixed;
     left: 0;
-    top: 0;
+    bottom: 0;
     width: 100%;
-    height: 2px;
-    background: rgba(255, 255, 255, 0.08);
-    z-index: 10;
+    box-sizing: border-box;
+    padding: 32px 40px 40px;
+    z-index: 6;
+    pointer-events: none;
   }
-  #progress-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #c98b4a, #e8b978);
-    transition: width 0.05s linear;
+  #spec-sheet .rule {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+    margin-bottom: 22px;
+  }
+  #spec-sheet .row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  #spec-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8f8272;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+  #spec-value {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.3rem, 3.4vw, 1.9rem);
+    color: #f4ece1;
+    text-align: right;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+  #spec-label.visible, #spec-value.visible {
+    opacity: 1;
   }
   #hint {
     position: fixed;
-    bottom: 28px;
+    bottom: 118px;
     left: 50%;
     transform: translateX(-50%);
-    color: #a99a86;
+    color: #8f8272;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     opacity: 0.7;
     z-index: 10;
     transition: opacity 0.4s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  #hint::before, #hint::after {
-    content: "";
-    display: block;
-    width: 22px;
-    height: 1px;
-    background: rgba(169, 154, 134, 0.5);
-  }
-  #counter {
-    position: fixed;
-    bottom: 28px;
-    right: 32px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    color: #a99a86;
-    opacity: 0.8;
-    z-index: 10;
-  }
-  #counter .current {
-    color: #e8b978;
-  }
-  .info-panel {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) translateY(6px);
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.7s ease, transform 0.7s ease;
-    pointer-events: none;
-    z-index: 5;
-    width: 100%;
-    padding: 0 20px;
-    box-sizing: border-box;
-  }
-  .info-panel.visible {
-    opacity: 1;
-    transform: translate(-50%, -50%) translateY(0);
-  }
-  .info-panel .label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: #c98b4a;
-    margin-bottom: 14px;
-  }
-  .info-panel .value {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 500;
-    font-size: clamp(1.9rem, 5vw, 3rem);
-    color: #f4ece1;
-    letter-spacing: 0.01em;
   }
 </style>
 </head>
 <body>
-  <div id="progress-rail"><div id="progress-fill"></div></div>
+  <div id="header">
+    <span class="mark">Dosocho</span>
+    <span>Single Origin</span>
+  </div>
   <div id="canvas-container">
     <div id="loading">Loading model...</div>
   </div>
-  <div id="vignette"></div>
-  <div id="info-0" class="info-panel">
-    <div class="label">Variedad</div>
-    <div class="value">Bourbon Caturra</div>
+  <div id="spec-sheet">
+    <div class="rule"></div>
+    <div class="row">
+      <div id="spec-label">Variedad</div>
+      <div id="spec-value">Bourbon Caturra</div>
+    </div>
   </div>
-  <div id="info-1" class="info-panel">
-    <div class="label">Altitud</div>
-    <div class="value">1800 MSNM</div>
-  </div>
-  <div id="info-2" class="info-panel">
-    <div class="label">Finca</div>
-    <div class="value">Vista Hermosa</div>
-  </div>
-  <div id="info-3" class="info-panel">
-    <div class="label">Proceso</div>
-    <div class="value">Lavado</div>
-  </div>
-  <div id="info-4" class="info-panel">
-    <div class="label">Región</div>
-    <div class="value">Huehuetenango</div>
-  </div>
-  <div id="counter"><span class="current">01</span> / 05</div>
   <div id="hint">Scroll</div>
   <div id="scroll-spacer"></div>
 
@@ -197,7 +171,7 @@ const container = document.getElementById('canvas-container');
 const loadingEl = document.getElementById('loading');
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0c0a08);
+scene.background = new THREE.Color(0x171310);
 
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 0, 5);
@@ -261,10 +235,17 @@ mtlLoader.load('3DModel.mtl', (materials) => {
   clearTimeout(window.__modelLoadTimeout);
 });
 
-const infoPanels = [0, 1, 2, 3, 4].map((i) => document.getElementById(`info-${i}`));
+const specs = [
+  { label: 'Variedad', value: 'Bourbon Caturra' },
+  { label: 'Altitud', value: '1800 MSNM' },
+  { label: 'Finca', value: 'Vista Hermosa' },
+  { label: 'Proceso', value: 'Lavado' },
+  { label: 'Región', value: 'Huehuetenango' },
+];
 const hintEl = document.getElementById('hint');
-const progressFillEl = document.getElementById('progress-fill');
-const counterCurrentEl = document.querySelector('#counter .current');
+const specLabelEl = document.getElementById('spec-label');
+const specValueEl = document.getElementById('spec-value');
+let currentSpecIndex = -1;
 
 function getScrollProgress() {
   const scrollTop = window.scrollY;
@@ -272,15 +253,20 @@ function getScrollProgress() {
   return docHeight > 0 ? scrollTop / docHeight : 0;
 }
 
-function updateInfoPanels(progress) {
-  const segment = 1 / infoPanels.length;
-  const activeIndex = Math.min(infoPanels.length - 1, Math.floor(progress / segment));
-  infoPanels.forEach((panel, i) => {
-    panel.classList.toggle('visible', i === activeIndex && progress > 0.01);
-  });
-  progressFillEl.style.width = `${progress * 100}%`;
-  counterCurrentEl.textContent = String(activeIndex + 1).padStart(2, '0');
-  hintEl.style.opacity = progress > 0.01 ? '0' : '0.7';
+function updateSpecSheet(progress) {
+  const segment = 1 / specs.length;
+  const activeIndex = Math.min(specs.length - 1, Math.floor(progress / segment));
+  const isVisible = progress > 0.01;
+
+  if (activeIndex !== currentSpecIndex) {
+    currentSpecIndex = activeIndex;
+    specLabelEl.textContent = specs[activeIndex].label;
+    specValueEl.textContent = specs[activeIndex].value;
+  }
+
+  specLabelEl.classList.toggle('visible', isVisible);
+  specValueEl.classList.toggle('visible', isVisible);
+  hintEl.style.opacity = isVisible ? '0' : '0.7';
 }
 
 function animate() {
@@ -288,7 +274,7 @@ function animate() {
   if (model) {
     const progress = getScrollProgress();
     model.rotation.y = Math.PI - progress * Math.PI * 2;
-    updateInfoPanels(progress);
+    updateSpecSheet(progress);
   }
   renderer.render(scene, camera);
 }
